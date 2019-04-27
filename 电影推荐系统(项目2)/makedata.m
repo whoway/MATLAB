@@ -1,0 +1,23 @@
+%------1.数据处理
+clc; 
+clear;
+items=importdata('movies.data','|',0);%获取电影数据结构%movies.csv,有文件头
+itemIds=items.textdata(:,1);%获取电影id列表
+%读取（用户id，电影id，评分，时间戳）
+base=load('ratings.data');%ratings.csv
+base=base(:,1:3);%去除时间戳%----第四行时间戳被去掉
+users=load('tags.data');%--第1列的%读取用户id列表%tags.csv
+[itemNum,v]=size(itemIds);%--第二列获取电影数
+[userNum,v]=size(users);%获取第一列用户数
+%定义电影，用户，评分的矩阵。电影为纬度，先定义零矩阵
+rating=zeros(userNum,itemNum);
+%获取评分的树木，然后循环
+[baseNum,v]=size(base);
+for n=1:baseNum  %循环将评分塞入rating矩阵
+	baseLine=base(n,:);
+	line=baseLine(1);%列
+	row=baseLine(2);%行
+	value=baseLine(3);
+	rating(line,row)=value;
+end
+save('rating.mat','rating');%将rating矩阵保存为文件
